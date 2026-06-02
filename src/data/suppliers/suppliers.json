@@ -1,0 +1,36 @@
+[
+  {
+    "id": "united",
+    "name": "United",
+    "productTypes": [
+      {
+        "id": "vertical-budget",
+        "name": "Vertical Budget",
+        "priceTableId": "united-vertical-budget-2026"
+      },
+      { "id": "vertical", "name": "Vertical", "priceTableId": "united-vertical-2026" },
+      { "id": "roller", "name": "Roller", "priceTableId": "united-roller-2026" }
+    ]
+  },
+  {
+    "id": "eclipse",
+    "name": "Eclipse",
+    "productTypes": [
+      { "id": "vertical", "name": "Vertical", "priceTableId": "eclipse-vertical-2026" },
+      {
+        "id": "vertical-market-collection",
+        "name": "Vertical Market Collection",
+        "priceTableId": "eclipse-vertical-market-collection-2026"
+      }
+    ]
+  },
+  {
+    "id": "excel",
+    "name": "Excel",
+    "productTypes": [
+      { "id": "vertical", "name": "Vertical", "priceTableId": "excel-vertical-2026" },
+      { "id": "roller", "name": "Roller", "priceTableId": "excel-roller-2026" },
+      { "id": "pvc-89mm", "name": "PVC 89mm", "priceTableId": "excel-pvc-89mm-2026" }
+    ]
+  }
+]

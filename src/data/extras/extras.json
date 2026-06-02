@@ -1,0 +1,140 @@
+[
+  {
+    "id": "welded-single",
+    "name": "Welded Single",
+    "description": "No charge. Mention on order sheet. Not all fabrics can be welded.",
+    "pricing": { "type": "fixed", "amount": 0 }
+  },
+  {
+    "id": "metal-welded-weights",
+    "name": "Welded With Metal Weights",
+    "description": "Rounded up by width.",
+    "pricing": {
+      "type": "widthTable",
+      "widths": [
+        500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250, 3500, 3750, 4000,
+        4250, 4500, 4750, 5000
+      ],
+      "prices": [
+        7.49, 7.49, 8.81, 10.13, 12.77, 14.09, 18.05, 19.36, 20.68, 22, 23.32, 24.64, 25.96, 27.28,
+        28.6, 29.92, 31.24, 32.55, 33.87
+      ]
+    }
+  },
+  {
+    "id": "metal-sewn-weights",
+    "name": "Sewn In Weights",
+    "description": "Rounded up by width.",
+    "pricing": {
+      "type": "widthTable",
+      "widths": [
+        500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250, 3500, 3750, 4000,
+        4250, 4500, 4750, 5000
+      ],
+      "prices": [
+        6.17, 6.17, 7.49, 8.81, 11.45, 12.77, 14.09, 15.41, 16.73, 18.05, 19.36, 20.68, 22, 23.32,
+        24.64, 25.96, 27.28, 28.6, 29.92
+      ]
+    }
+  },
+  {
+    "id": "black-weights-hangers-chain",
+    "name": "Black Weights / Hangers / Chain",
+    "description": "Rounded up by width.",
+    "pricing": {
+      "type": "widthTable",
+      "widths": [
+        500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250, 3500, 3750, 4000,
+        4250, 4500, 4750, 5000
+      ],
+      "prices": [
+        5.28, 5.28, 5.28, 6.59, 7.91, 9.23, 10.55, 11.87, 13.19, 14.51, 15.83, 17.15, 18.47, 19.78,
+        21.1, 22.42, 23.74, 25.06, 26.38
+      ]
+    }
+  },
+  {
+    "id": "beige-weights",
+    "name": "Beige Weights / Hangers / Chain",
+    "description": "Rounded up by width.",
+    "pricing": {
+      "type": "widthTable",
+      "widths": [
+        500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250, 3500, 3750, 4000,
+        4250, 4500, 4750, 5000
+      ],
+      "prices": [
+        5.28, 5.28, 5.28, 6.59, 7.91, 9.23, 10.55, 11.87, 13.19, 14.51, 15.83, 17.15, 18.47, 19.78,
+        21.1, 22.42, 23.74, 25.06, 26.38
+      ]
+    }
+  },
+  {
+    "id": "metal-stabilising-chain",
+    "name": "Metal Stabilising Chain",
+    "description": "Rounded up by width.",
+    "pricing": {
+      "type": "widthTable",
+      "widths": [
+        500, 750, 1000, 1250, 1500, 1750, 2000, 2250, 2500, 2750, 3000, 3250, 3500, 3750, 4000,
+        4250, 4500, 4750, 5000
+      ],
+      "prices": [
+        3.96, 5.28, 6.59, 7.91, 9.23, 10.55, 11.87, 13.19, 14.51, 15.83, 17.15, 18.47, 19.78, 21.1,
+        22.42, 23.74, 25.06, 26.38, 27.7
+      ]
+    }
+  },
+  {
+    "id": "metal-side-chain",
+    "name": "Metal Side Chain",
+    "description": "Per rail.",
+    "pricing": { "type": "perBlind", "amount": 3.1 }
+  },
+  {
+    "id": "curved-rail-slimline",
+    "name": "Curved Rail Only (Slimline)",
+    "pricing": { "type": "fixed", "amount": 85.7 }
+  },
+  {
+    "id": "curved-rail-vogue",
+    "name": "Curved Rail Only (Vogue)",
+    "description": "Satin not available.",
+    "pricing": { "type": "fixed", "amount": 139.73 }
+  },
+  {
+    "id": "curved-rail-with-fabric-slimline",
+    "name": "Curved Rail With Fabric (Slimline)",
+    "description": "Slimline rail cost plus 15% of fabric cost.",
+    "pricing": { "type": "fixedPlusPercentageBase", "amount": 85.7, "percentage": 15 }
+  },
+  {
+    "id": "curved-rail-with-fabric-vogue",
+    "name": "Curved Rail With Fabric (Vogue)",
+    "description": "Vogue rail cost plus 15% of fabric cost.",
+    "pricing": { "type": "fixedPlusPercentageBase", "amount": 139.73, "percentage": 15 }
+  },
+  {
+    "id": "safety-clips",
+    "name": "Louvolite Safety Clips",
+    "description": "Each.",
+    "pricing": { "type": "fixed", "amount": 1.1 }
+  },
+  {
+    "id": "recut-headrail",
+    "name": "Recut or Record Headrail",
+    "description": "Each rail.",
+    "pricing": { "type": "fixed", "amount": 4 }
+  },
+  {
+    "id": "alternating-slats",
+    "name": "Alternating Slats",
+    "description": "Per colour.",
+    "pricing": { "type": "fixed", "amount": 2 }
+  },
+  {
+    "id": "cord-tidies",
+    "name": "Omega Adhesive Cord Tidy",
+    "pricing": { "type": "fixed", "amount": 1.1 }
+  }
+]

@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import QuoteTypeTabs from "@/components/QuoteTypeTabs";
 import { useQuote } from "@/components/QuoteContext";
-import { WARDROBE_CATEGORIES, findWardrobeProduct } from "@/data/wardrobe/categories";
+import { WARDROBE_CATEGORIES } from "@/data/wardrobe/categories";
 import { calculateLine, calculateWardrobeTotals } from "@/wardrobe-pricing/calculate";
 import { formatGBP } from "@/lib/quote-types";
 import type {

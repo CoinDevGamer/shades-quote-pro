@@ -531,13 +531,21 @@ export function ProjectQuoteBuilder({ mode }: { mode: BuilderMode }) {
           </button>
           <motion.button
             whileTap={{ scale: 0.98 }}
-            onClick={exportProject}
+            onClick={() => exportProject(false)}
             disabled={exporting}
             className="inline-flex h-10 items-center gap-2 rounded-xl bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-95 disabled:opacity-70"
           >
             <Download className="h-4 w-4" />
             {exporting ? t("actions.exporting") : t("actions.export")}
           </motion.button>
+          <button
+            onClick={() => exportProject(true)}
+            disabled={exporting}
+            title="Always renders the customer document in English"
+            className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-3.5 text-sm font-medium hover:bg-accent disabled:opacity-70"
+          >
+            <Download className="h-4 w-4" /> Export in English
+          </button>
           <button
             onClick={printProject}
             className="inline-flex h-10 items-center gap-2 rounded-xl border border-border bg-card px-3.5 text-sm font-medium hover:bg-accent"
@@ -924,6 +932,25 @@ export function ProjectQuoteBuilder({ mode }: { mode: BuilderMode }) {
       </div>
       <div className="project-print-sheet">
         <ProjectQuotePreview project={project} scopeLabel={t(config.scopeKey)} />
+      </div>
+      {/* Off-screen English render used for "Export in English" PNG */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "fixed",
+          left: "-10000px",
+          top: 0,
+          width: "760px",
+          pointerEvents: "none",
+          opacity: 0,
+        }}
+      >
+        <ProjectQuotePreview
+          ref={englishPreviewRef}
+          project={project}
+          scopeLabel={t(config.scopeKey)}
+          forceLocale="en"
+        />
       </div>
     </div>
   );

@@ -120,7 +120,7 @@ function withPerfectFitFrameSurcharge(
   frameColour: PerfectFitRollerFrameColour,
 ) {
   const withoutFrameSurcharge = extras.filter(
-    (item) => !PERFECT_FIT_FRAME_SURCHARGE_IDS.includes(item.id),
+    (item) => !(PERFECT_FIT_FRAME_SURCHARGE_IDS as readonly string[]).includes(item.id),
   );
   if (!isPerfectFitFrameBlindType(blindTypeId) || !frameColourHasSurcharge(frameColour)) {
     return withoutFrameSurcharge;
@@ -136,7 +136,7 @@ function isExtraApplicableToBlindType(
   blindTypeId: string,
   includeInternal = false,
 ) {
-  if (!includeInternal && PERFECT_FIT_FRAME_SURCHARGE_IDS.includes(extra.id)) {
+  if (!includeInternal && (PERFECT_FIT_FRAME_SURCHARGE_IDS as readonly string[]).includes(extra.id)) {
     return false;
   }
   return !extra.applicableBlindTypes?.length || extra.applicableBlindTypes.includes(blindTypeId);
@@ -500,7 +500,9 @@ export function ProjectQuoteBuilder({ mode }: { mode: BuilderMode }) {
     toast.message(t("actions.reset"));
   };
 
-  const allowedItemTypes = ITEM_TYPES.filter((item) => config.itemTypes.includes(item.type));
+  const allowedItemTypes = ITEM_TYPES.filter((item) =>
+    (config.itemTypes as readonly DraftType[]).includes(item.type),
+  );
 
   return (
     <div className="mx-auto w-full max-w-[1500px]">

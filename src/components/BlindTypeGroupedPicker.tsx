@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { Search, Check } from "lucide-react";
 
 export interface BlindTypeOption {
@@ -57,7 +57,7 @@ export function BlindTypeGroupedPicker({
   value: string;
   onChange: (value: string) => void;
   options: BlindTypeOption[];
-  renderGraphic: (typeId: string) => JSX.Element;
+  renderGraphic: (typeId: string) => ReactNode;
 }) {
   const [query, setQuery] = useState("");
 

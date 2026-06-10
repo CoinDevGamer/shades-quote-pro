@@ -5,10 +5,12 @@ import { RouterProvider } from "@tanstack/react-router";
 import { getRouter } from "./router";
 import "./styles.css";
 
-const rootElement = document.getElementById("root");
+let rootElement = document.getElementById("root");
 
 if (!rootElement) {
-  throw new Error("GitHub Pages root element was not found.");
+  rootElement = document.createElement("div");
+  rootElement.id = "root";
+  document.body.appendChild(rootElement);
 }
 
 createRoot(rootElement).render(

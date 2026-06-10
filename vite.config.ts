@@ -12,6 +12,7 @@ export default defineConfig(({ command }) => ({
     command === "build" ? cloudflare({ viteEnvironment: { name: "ssr" } }) : null,
     tsConfigPaths(),
     tanstackStart({
+      router: { basepath: process.env.TSS_ROUTER_BASEPATH || undefined },
       server: { entry: "server" },
     }),
     viteReact(),

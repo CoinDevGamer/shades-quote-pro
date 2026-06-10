@@ -553,14 +553,15 @@ export function ProjectQuoteBuilder({ mode }: { mode: BuilderMode }) {
                 value={project.ref}
                 onChange={(ref) => setProject((current) => ({ ...current, ref }))}
               />
-              <TextInput
+              <DateField
                 label={t("quote.date")}
-                type="date"
                 value={project.date.slice(0, 10)}
                 onChange={(date) =>
                   setProject((current) => ({
                     ...current,
-                    date: new Date(`${date}T12:00:00`).toISOString(),
+                    date: date
+                      ? new Date(`${date}T12:00:00`).toISOString()
+                      : current.date,
                   }))
                 }
               />
@@ -1185,11 +1186,12 @@ function BlindDraftForm({
   return (
     <div className="space-y-4">
       <div className="grid gap-3 md:grid-cols-2">
-        <BlindTypePicker
+        <BlindTypeGroupedPicker
           label={t("field.blindType")}
           value={draft.blindTypeId}
           onChange={handleBlindTypeChange}
           options={blindTypeOptions}
+          renderGraphic={(typeId) => <BlindTypeGraphic typeId={typeId} />}
         />
         {availableOptions.length > 0 && !hasOnlyStandardPlaceholder && (
           <SelectInput

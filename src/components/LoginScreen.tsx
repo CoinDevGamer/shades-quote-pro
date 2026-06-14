@@ -73,14 +73,17 @@ export default function LoginScreen() {
           <form onSubmit={onSubmit} className="relative z-10 space-y-4">
             <Field
               icon={<Mail className="h-4 w-4" />}
+              id="login-email"
               type="email"
               placeholder={t("login.email")}
               value={email}
               onChange={(v) => setEmail(v)}
               autoComplete="email"
+              autoFocus
             />
             <Field
               icon={<Lock className="h-4 w-4" />}
+              id="login-password"
               type="password"
               placeholder={t("login.password")}
               value={password}
@@ -121,28 +124,43 @@ export default function LoginScreen() {
 
 function Field({
   icon,
+  id,
   type,
   placeholder,
   value,
   onChange,
   autoComplete,
+  autoFocus = false,
 }: {
   icon: React.ReactNode;
+  id: string;
   type: string;
   placeholder: string;
   value: string;
   onChange: (v: string) => void;
   autoComplete?: string;
+  autoFocus?: boolean;
 }) {
   return (
-    <label className="group flex h-12 items-center gap-3 rounded-xl border border-white/10 bg-white/[0.06] px-4 transition-colors focus-within:border-white/35 focus-within:bg-white/[0.09] focus-within:ring-2 focus-within:ring-white/15">
-      <span className="text-white/50 group-focus-within:text-white/80">{icon}</span>
+    <label
+      htmlFor={id}
+      className="group flex h-12 items-center gap-3 rounded-xl border border-white/10 bg-white/[0.06] px-4 transition-colors focus-within:border-white/35 focus-within:bg-white/[0.09] focus-within:ring-2 focus-within:ring-white/15"
+    >
+      <span
+        aria-hidden
+        className="pointer-events-none text-white/50 group-focus-within:text-white/80"
+      >
+        {icon}
+      </span>
       <input
+        id={id}
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onInput={(e) => onChange(e.currentTarget.value)}
         placeholder={placeholder}
         autoComplete={autoComplete}
+        autoFocus={autoFocus}
         className="login-field-input h-full w-full bg-transparent text-sm text-white placeholder:text-white/40 focus:outline-none focus-visible:outline-none"
       />
     </label>

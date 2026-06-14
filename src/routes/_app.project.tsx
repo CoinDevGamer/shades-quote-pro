@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import {
   AlertTriangle,
   Blinds,
+  Check,
   Copy,
   DoorOpen,
   Download,
@@ -17,7 +18,9 @@ import {
   Pencil,
   Plus,
   RotateCcw,
+  Search,
   Trash2,
+  X,
 } from "lucide-react";
 import ProjectQuotePreview from "@/components/ProjectQuotePreview";
 import { useQuote } from "@/components/QuoteContext";
@@ -26,7 +29,7 @@ import { BlindTypeGroupedPicker } from "@/components/BlindTypeGroupedPicker";
 import { DateField } from "@/components/DateField";
 import { extras, fabrics, priceTables, suppliers } from "@/data/catalog";
 import { BLIND_PRODUCT_TYPES, getBlindProductType } from "@/data/blinds/productTypes";
-import { WARDROBE_CATEGORIES } from "@/data/wardrobe/categories";
+import { WARDROBE_CATEGORIES, WARDROBE_DOOR_ADDONS } from "@/data/wardrobe/categories";
 import { defaultQuote, formatGBP, uid } from "@/lib/quote-types";
 import { useI18n, type TranslationKey } from "@/lib/i18n";
 import { calculateQuote } from "@/pricing/calculateQuote";
@@ -63,6 +66,7 @@ interface DraftState {
   wardrobeQuantity: number;
   wardrobeManualUnitPrice?: number;
   wardrobeAddons: WardrobeAddon[];
+  wardrobeColour: string;
   title: string;
   code: string;
   description: string;
@@ -70,6 +74,99 @@ interface DraftState {
   unitPrice: number;
   taxable: boolean;
   notes: string;
+}
+
+interface DoorColourOption {
+  name: string;
+  hex: string;
+}
+
+const DOOR_COLOUR_GROUPS: Record<string, DoorColourOption[]> = {
+  create: [
+    { name: "Frost White Supermatt", hex: "#f4f2ed" },
+    { name: "Light Grey Supermatt", hex: "#c9c9c2" },
+    { name: "Cashmere Supermatt", hex: "#c8b9a5" },
+    { name: "Dark Grey Supermatt", hex: "#575856" },
+    { name: "Black Supermatt", hex: "#171717" },
+    { name: "Reed Green Supermatt", hex: "#66705d" },
+    { name: "Heritage Green Supermatt", hex: "#3f5545" },
+    { name: "Dust Grey Supermatt", hex: "#8b8983" },
+    { name: "Indigo Supermatt", hex: "#263848" },
+    { name: "Alby Blue Supermatt", hex: "#778996" },
+    { name: "Ivory Gloss", hex: "#eee4cf" },
+    { name: "White Gloss", hex: "#f7f7f2" },
+    { name: "Light Grey Gloss", hex: "#d2d3ce" },
+    { name: "Cashmere Gloss", hex: "#cbbba4" },
+  ],
+  serica: [
+    { name: "Frost White", hex: "#f4f2ed" },
+    { name: "Light Grey", hex: "#c9c9c2" },
+    { name: "Dark Grey", hex: "#575856" },
+    { name: "Black", hex: "#171717" },
+    { name: "Cashmere", hex: "#c8b9a5" },
+    { name: "Denim", hex: "#4d5d6a" },
+    { name: "Alby Blue", hex: "#778996" },
+    { name: "Dust Grey", hex: "#8b8983" },
+    { name: "Graphite", hex: "#4a4b48" },
+    { name: "Heritage Green", hex: "#3f5545" },
+  ],
+  vision: [
+    { name: "White", hex: "#f7f7f2" },
+    { name: "Light Grey", hex: "#c9c9c2" },
+    { name: "Black", hex: "#151515" },
+    { name: "Cream", hex: "#eee4cf" },
+    { name: "Cashmere", hex: "#c8b9a5" },
+    { name: "Beige Metallic", hex: "#b7aa96" },
+    { name: "Stone Grey", hex: "#8f8b80" },
+    { name: "Anthracite Grey", hex: "#3f4241" },
+    { name: "Dark Grey", hex: "#565856" },
+    { name: "Metallic Blue", hex: "#4a6075" },
+    { name: "Fjord", hex: "#9caea8" },
+  ],
+  milano: [
+    { name: "Grained Black", hex: "#1d1d1a" },
+    { name: "Cross Gold", hex: "#b0986e" },
+    { name: "Cross Brass", hex: "#6a6554" },
+    { name: "Relief Oak Ginger", hex: "#a17345" },
+    { name: "Relief Oak Pimento", hex: "#8b6044" },
+    { name: "Travertin Alcamo", hex: "#b7afa1" },
+    { name: "Pietra Grey", hex: "#676767" },
+    { name: "Cremona Oak Cannolo", hex: "#9f835d" },
+    { name: "Cremona Oak Torro", hex: "#7d624a" },
+  ],
+  fusionTextured: [
+    { name: "Snow White", hex: "#f7f7f2" },
+    { name: "Ivory", hex: "#eee4cf" },
+    { name: "Cashmere", hex: "#c8b9a5" },
+    { name: "Light Grey", hex: "#c9c9c2" },
+    { name: "Graphite", hex: "#4a4b48" },
+    { name: "Black", hex: "#171717" },
+    { name: "Gold Harbor Oak", hex: "#b48d59" },
+    { name: "Hazel Silverjack Oak", hex: "#9b8870" },
+    { name: "Coast Evoke Oak", hex: "#9d7c54" },
+    { name: "Concrete Flow", hex: "#8c8f8c" },
+  ],
+  fusionGloss: [
+    { name: "Snow White", hex: "#f7f7f2" },
+    { name: "Cool Grey", hex: "#c3c5c4" },
+    { name: "Cashmere", hex: "#c8b9a5" },
+    { name: "Ivory", hex: "#eee4cf" },
+    { name: "Slate Grey", hex: "#626a70" },
+    { name: "Black", hex: "#171717" },
+  ],
+};
+
+function doorColourOptions(productId: string): DoorColourOption[] {
+  if (productId === "serica-door") return DOOR_COLOUR_GROUPS.serica;
+  if (productId === "vision-door") return DOOR_COLOUR_GROUPS.vision;
+  if (productId === "milano-door") return DOOR_COLOUR_GROUPS.milano;
+  if (productId === "fusion-textured-door") return DOOR_COLOUR_GROUPS.fusionTextured;
+  if (productId === "fusion-mirror-gloss-door") return DOOR_COLOUR_GROUPS.fusionGloss;
+  if (productId === "manhattan-door" || productId === "cairo-fretted-door") {
+    return DOOR_COLOUR_GROUPS.create;
+  }
+  if (productId === "create-vinyl-door") return DOOR_COLOUR_GROUPS.create;
+  return [];
 }
 
 const ITEM_TYPES: {
@@ -320,6 +417,7 @@ function initialDraft(): DraftState {
     wardrobeHeightMm: 0,
     wardrobeQuantity: 1,
     wardrobeAddons: [],
+    wardrobeColour: "",
     title: "",
     code: "",
     description: "",
@@ -923,7 +1021,7 @@ export function ProjectQuoteBuilder({ mode }: { mode: BuilderMode }) {
               <div className="mt-4 flex gap-2 rounded-2xl border border-amber-300 bg-amber-50 p-3 text-sm text-amber-900">
                 <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
                 <div>
-                  <div className="font-medium">Wardrobe price needs attention</div>
+                  <div className="font-medium">Item price needs attention</div>
                   <p className="mt-0.5 text-xs">{livePricingWarning}</p>
                 </div>
               </div>
@@ -1260,6 +1358,12 @@ function buildProjectItem(
       manualUnitPrice: draft.wardrobeManualUnitPrice,
       addons: draft.wardrobeAddons,
     });
+    const wardrobeNotes = [
+      draft.wardrobeColour ? `Colour / finish: ${draft.wardrobeColour}` : "",
+      draft.notes,
+    ]
+      .filter(Boolean)
+      .join("\n");
     const wardrobeLine = {
       id: "draft",
       categoryId: category.id,
@@ -1271,7 +1375,7 @@ function buildProjectItem(
       quantity: Math.max(1, draft.wardrobeQuantity),
       manualUnitPrice: draft.wardrobeManualUnitPrice,
       addons: draft.wardrobeAddons,
-      notes: draft.notes || undefined,
+      notes: wardrobeNotes || undefined,
       calc,
     };
 
@@ -1284,7 +1388,7 @@ function buildProjectItem(
       unitPrice: calc.unitPrice,
       lineTotal: calc.lineTotal,
       taxable: true,
-      notes: draft.notes || undefined,
+      notes: wardrobeNotes || undefined,
       wardrobeLine,
     };
   }
@@ -1392,6 +1496,7 @@ function draftFromItem(item: ProjectQuoteItem): DraftState {
       wardrobeQuantity: line.quantity,
       wardrobeManualUnitPrice: line.manualUnitPrice,
       wardrobeAddons: line.addons,
+      wardrobeColour: "",
       notes: line.notes ?? "",
     };
   }
@@ -1623,10 +1728,11 @@ function WardrobeDraftForm({
   product?: WardrobeProduct;
   t: (key: TranslationKey) => string;
 }) {
+  const doorColours = product && category?.id === "doors" ? doorColourOptions(product.id) : [];
   return (
     <div className="space-y-4">
       <div className="grid gap-3 md:grid-cols-2">
-        <SelectInput
+        <WardrobeCategoryPicker
           label={t("field.category")}
           value={draft.wardrobeCategoryId}
           onChange={(wardrobeCategoryId) => {
@@ -1636,22 +1742,35 @@ function WardrobeDraftForm({
               wardrobeCategoryId: wardrobeCategoryId as WardrobeCategoryId,
               wardrobeProductId: nextCategory?.products[0]?.id ?? "",
               wardrobeManualUnitPrice: undefined,
+              wardrobeAddons: wardrobeCategoryId === "doors" ? current.wardrobeAddons : [],
             }));
           }}
-          options={WARDROBE_CATEGORIES.map((item) => ({ value: item.id, label: item.name }))}
         />
-        <SelectInput
+        <WardrobeProductPicker
           label={t("field.product")}
           value={draft.wardrobeProductId}
+          products={category?.products ?? []}
+          fallbackImageSrc={category?.id === "doors" ? undefined : category?.imageSrc}
           onChange={(wardrobeProductId) =>
             setDraft((current) => ({
               ...current,
               wardrobeProductId,
               wardrobeManualUnitPrice: undefined,
+              wardrobeAddons: category?.id === "doors" ? current.wardrobeAddons : [],
+              wardrobeColour: "",
             }))
           }
-          options={(category?.products ?? []).map((item) => ({ value: item.id, label: item.name }))}
         />
+        {(product?.imageSrc ?? (category?.id === "doors" ? undefined : category?.imageSrc)) && (
+          <div className="overflow-hidden rounded-2xl border border-border bg-background md:col-span-2">
+            <img
+              src={product?.imageSrc ?? category?.imageSrc}
+              alt={`${product?.name ?? category?.name} catalogue reference`}
+              className="h-52 w-full object-cover sm:h-64"
+              loading="lazy"
+            />
+          </div>
+        )}
         {product?.requiresDimensions && (
           <>
             <NumberInput
@@ -1706,11 +1825,435 @@ function WardrobeDraftForm({
       {product?.description && (
         <p className="text-[11px] text-muted-foreground">{product.description}</p>
       )}
+      {doorColours.length > 0 && (
+        <DoorColourPicker
+          value={draft.wardrobeColour}
+          options={doorColours}
+          onChange={(wardrobeColour) =>
+            setDraft((current) => ({
+              ...current,
+              wardrobeColour: current.wardrobeColour === wardrobeColour ? "" : wardrobeColour,
+            }))
+          }
+        />
+      )}
+      {category?.id === "doors" && (
+        <div>
+          <span className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+            Door surcharges
+          </span>
+          <div className="grid gap-2 md:grid-cols-2">
+            {WARDROBE_DOOR_ADDONS.map((addon) => {
+              const selected = draft.wardrobeAddons.some((item) => item.id === addon.id);
+              const amount = addon.amount > 0 ? `+${addon.amount}%` : `${addon.amount}%`;
+              return (
+                <label
+                  key={addon.id}
+                  className="flex min-h-11 items-center gap-2 rounded-xl border border-border bg-background px-3 text-sm"
+                >
+                  <input
+                    type="checkbox"
+                    checked={selected}
+                    onChange={(event) =>
+                      setDraft((current) => ({
+                        ...current,
+                        wardrobeAddons: event.target.checked
+                          ? [...current.wardrobeAddons, addon]
+                          : current.wardrobeAddons.filter((item) => item.id !== addon.id),
+                      }))
+                    }
+                  />
+                  <span className="min-w-0 flex-1">{addon.name}</span>
+                  <span className="text-xs text-muted-foreground">{amount}</span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      )}
       <Textarea
         label={t("field.notes")}
         value={draft.notes}
         onChange={(notes) => setDraft((current) => ({ ...current, notes }))}
       />
+    </div>
+  );
+}
+
+function WardrobeCategoryPicker({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: WardrobeCategoryId;
+  onChange: (value: string) => void;
+}) {
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const selected = WARDROBE_CATEGORIES.find((category) => category.id === value);
+  const q = query.trim().toLowerCase();
+  const filtered = q
+    ? WARDROBE_CATEGORIES.filter((category) => category.name.toLowerCase().includes(q))
+    : WARDROBE_CATEGORIES;
+
+  useEffect(() => {
+    if (!open) return;
+    const id = window.setTimeout(() => searchRef.current?.focus(), 80);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.clearTimeout(id);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <div>
+      <span className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+        {label}
+      </span>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl border border-border bg-background px-3.5 py-2 text-left text-sm transition hover:border-foreground/30 hover:bg-accent/30 focus:outline-none focus:ring-2 focus:ring-ring"
+      >
+        <span className="min-w-0">
+          <span className="block truncate font-medium">{selected?.name ?? "Select category"}</span>
+          <span className="mt-0.5 block text-xs text-muted-foreground">
+            {selected?.blurb ?? "Choose a wardrobe category"}
+          </span>
+        </span>
+        <span className="rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground">
+          View
+        </span>
+      </button>
+
+      {open && (
+        <div
+          className="fixed inset-0 z-50 bg-black/40 p-0 backdrop-blur-sm sm:p-4"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setOpen(false);
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Select wardrobe category"
+            className="ml-auto flex h-full w-full max-w-5xl flex-col overflow-hidden bg-background shadow-2xl sm:rounded-3xl sm:border sm:border-border"
+          >
+            <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Select Category
+                </div>
+                <h2 className="mt-1 text-xl font-semibold tracking-tight">
+                  {selected?.name ?? "Choose a category"}
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="rounded-xl border border-border p-2 text-muted-foreground hover:bg-accent hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                aria-label="Close wardrobe category selector"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="border-b border-border px-5 py-4 sm:px-6">
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  ref={searchRef}
+                  type="search"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Search wardrobe categories..."
+                  className="h-11 w-full rounded-xl border border-border bg-background pl-10 pr-3 text-sm focus:border-foreground/40 focus:outline-none focus:ring-2 focus:ring-foreground/10"
+                  aria-label="Search wardrobe categories"
+                />
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-6">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {filtered.map((category) => {
+                  const isSelected = category.id === value;
+                  return (
+                    <button
+                      key={category.id}
+                      type="button"
+                      onClick={() => {
+                        onChange(category.id);
+                        setOpen(false);
+                      }}
+                      aria-pressed={isSelected}
+                      className={`group relative overflow-hidden rounded-2xl border text-left transition focus:outline-none focus:ring-2 focus:ring-ring ${
+                        isSelected
+                          ? "border-foreground/50 bg-foreground text-background shadow-sm"
+                          : "border-border bg-card text-foreground hover:border-foreground/30 hover:bg-accent/40"
+                      }`}
+                    >
+                      {isSelected && (
+                        <span className="absolute right-2 top-2 z-10 inline-flex h-6 w-6 items-center justify-center rounded-full bg-background/90 text-foreground shadow-sm">
+                          <Check className="h-4 w-4" />
+                        </span>
+                      )}
+                      {category.imageSrc ? (
+                        <img
+                          src={category.imageSrc}
+                          alt=""
+                          className="h-36 w-full object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="flex h-36 items-center justify-center bg-muted/50 px-4 text-center text-xs text-muted-foreground">
+                          Catalogue category
+                        </div>
+                      )}
+                      <div className="p-3">
+                        <div className="line-clamp-2 text-sm font-semibold leading-tight">
+                          {category.name}
+                        </div>
+                        <div
+                          className={`mt-1 line-clamp-2 text-xs ${
+                            isSelected ? "text-background/70" : "text-muted-foreground"
+                          }`}
+                        >
+                          {category.blurb}
+                        </div>
+                      </div>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DoorColourPicker({
+  value,
+  options,
+  onChange,
+}: {
+  value: string;
+  options: DoorColourOption[];
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div>
+      <span className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+        Door colour / finish
+      </span>
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+        {options.map((option) => {
+          const selected = option.name === value;
+          return (
+            <button
+              key={option.name}
+              type="button"
+              onClick={() => onChange(option.name)}
+              aria-pressed={selected}
+              className={`flex min-h-14 items-center gap-3 rounded-xl border px-3 py-2 text-left text-sm transition focus:outline-none focus:ring-2 focus:ring-ring ${
+                selected
+                  ? "border-foreground/60 bg-foreground text-background"
+                  : "border-border bg-background hover:border-foreground/30 hover:bg-accent/30"
+              }`}
+            >
+              <span
+                className="h-8 w-8 shrink-0 rounded-lg border border-border shadow-inner"
+                style={{ backgroundColor: option.hex }}
+              />
+              <span className="min-w-0 flex-1 leading-tight">{option.name}</span>
+              {selected && <Check className="h-4 w-4 shrink-0" />}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function WardrobeProductPicker({
+  label,
+  value,
+  products,
+  fallbackImageSrc,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  products: WardrobeProduct[];
+  fallbackImageSrc?: string;
+  onChange: (value: string) => void;
+}) {
+  const [query, setQuery] = useState("");
+  const [open, setOpen] = useState(false);
+  const searchRef = useRef<HTMLInputElement>(null);
+  const selected = products.find((product) => product.id === value);
+  const q = query.trim().toLowerCase();
+  const filtered = q
+    ? products.filter((product) => product.name.toLowerCase().includes(q))
+    : products;
+
+  useEffect(() => {
+    if (!open) return;
+    const id = window.setTimeout(() => searchRef.current?.focus(), 80);
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      window.clearTimeout(id);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
+
+  return (
+    <div>
+      <span className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.12em] text-muted-foreground">
+        {label}
+      </span>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl border border-border bg-background px-3.5 py-2 text-left text-sm transition hover:border-foreground/30 hover:bg-accent/30 focus:outline-none focus:ring-2 focus:ring-ring"
+      >
+        <span className="min-w-0">
+          <span className="block truncate font-medium">{selected?.name ?? "Select product"}</span>
+          <span className="mt-0.5 block text-xs text-muted-foreground">
+            {(selected?.imageSrc ?? fallbackImageSrc)
+              ? "Visual reference available"
+              : "Catalogue product"}
+          </span>
+        </span>
+        <span className="rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground">
+          View
+        </span>
+      </button>
+
+      {open && (
+        <div
+          className="fixed inset-0 z-50 bg-black/40 p-0 backdrop-blur-sm sm:p-4"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) setOpen(false);
+          }}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label="Select wardrobe product"
+            className="ml-auto flex h-full w-full max-w-5xl flex-col overflow-hidden bg-background shadow-2xl sm:rounded-3xl sm:border sm:border-border"
+          >
+            <div className="flex items-start justify-between gap-4 border-b border-border px-5 py-4 sm:px-6">
+              <div>
+                <div className="text-[11px] uppercase tracking-[0.18em] text-muted-foreground">
+                  Select Product
+                </div>
+                <h2 className="mt-1 text-xl font-semibold tracking-tight">
+                  {selected?.name ?? "Choose a wardrobe product"}
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setOpen(false)}
+                className="rounded-xl border border-border p-2 text-muted-foreground hover:bg-accent hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+                aria-label="Close wardrobe product selector"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="border-b border-border px-5 py-4 sm:px-6">
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <input
+                  ref={searchRef}
+                  type="search"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Search wardrobe products..."
+                  className="h-11 w-full rounded-xl border border-border bg-background pl-10 pr-3 text-sm focus:border-foreground/40 focus:outline-none focus:ring-2 focus:ring-foreground/10"
+                  aria-label="Search wardrobe products"
+                />
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-y-auto px-5 py-5 sm:px-6">
+              {filtered.length === 0 ? (
+                <div className="rounded-2xl border border-dashed border-border px-4 py-12 text-center text-sm text-muted-foreground">
+                  No wardrobe products match "{query}".
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {filtered.map((product) => {
+                    const isSelected = product.id === value;
+                    const imageSrc = product.imageSrc ?? fallbackImageSrc;
+                    return (
+                      <button
+                        key={product.id}
+                        type="button"
+                        onClick={() => {
+                          onChange(product.id);
+                          setOpen(false);
+                        }}
+                        aria-pressed={isSelected}
+                        className={`group relative overflow-hidden rounded-2xl border text-left transition focus:outline-none focus:ring-2 focus:ring-ring ${
+                          isSelected
+                            ? "border-foreground/50 bg-foreground text-background shadow-sm"
+                            : "border-border bg-card text-foreground hover:border-foreground/30 hover:bg-accent/40"
+                        }`}
+                      >
+                        {isSelected && (
+                          <span className="absolute right-2 top-2 z-10 inline-flex h-6 w-6 items-center justify-center rounded-full bg-background/90 text-foreground shadow-sm">
+                            <Check className="h-4 w-4" />
+                          </span>
+                        )}
+                        {imageSrc ? (
+                          <img
+                            src={imageSrc}
+                            alt=""
+                            className="h-36 w-full object-cover"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="flex h-36 items-center justify-center bg-muted/50 px-4 text-center text-xs text-muted-foreground">
+                            Catalogue item
+                          </div>
+                        )}
+                        <div className="p-3">
+                          <div className="line-clamp-2 text-sm font-semibold leading-tight">
+                            {product.name}
+                          </div>
+                          {product.description && (
+                            <div
+                              className={`mt-1 line-clamp-2 text-xs ${
+                                isSelected ? "text-background/70" : "text-muted-foreground"
+                              }`}
+                            >
+                              {product.description}
+                            </div>
+                          )}
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

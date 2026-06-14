@@ -1,4 +1,4 @@
-import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 
 const repoRoot = process.cwd();
@@ -8,6 +8,7 @@ const basePath = normalizeBasePath(
 );
 
 await mkdir(pagesDir, { recursive: true });
+await rm(path.join(pagesDir, "assets", "index-CEq0z4sX.js"), { force: true });
 
 const assets = await readdir(path.join(pagesDir, "assets"));
 const entryScript = assets
@@ -43,10 +44,6 @@ const html = `<!doctype html>
 await writeFile(path.join(pagesDir, "index.html"), html);
 await writeFile(path.join(pagesDir, "404.html"), html);
 await writeFile(path.join(pagesDir, ".nojekyll"), "");
-
-for (const staleEntry of ["index-CEq0z4sX.js"]) {
-  await writeFile(path.join(pagesDir, "assets", staleEntry), `import "./${entryScript}";\n`);
-}
 
 console.log(
   `GitHub Pages artifact ready: dist/github-pages (${packageJson.name}, basePath=${basePath || "/"})`,

@@ -1,0 +1,31 @@
+{
+  "categories": [
+    { "id": "doors", "name": "Doors", "fileName": "" },
+    { "id": "panels", "name": "Panels / Cut & Edge", "fileName": "" },
+    { "id": "worktops", "name": "Worktops", "fileName": "" },
+    { "id": "sliding-doors", "name": "Sliding Doors", "fileName": "" },
+    { "id": "acoustic-panels", "name": "Acoustic Panels", "fileName": "" },
+    { "id": "handles", "name": "Handles", "fileName": "" },
+    { "id": "hinges", "name": "Hinges", "fileName": "" },
+    { "id": "drawers", "name": "Drawers", "fileName": "" },
+    { "id": "internal-storage", "name": "Internal Storage", "fileName": "" },
+    { "id": "led-lighting", "name": "LED Lighting", "fileName": "" },
+    { "id": "bedroom-accessories", "name": "Bedroom Accessories", "fileName": "" },
+    { "id": "sinks-taps", "name": "Sinks & Taps", "fileName": "" },
+    { "id": "misc", "name": "Miscellaneous Accessories", "fileName": "" }
+  ],
+  "products": [
+    { "id": "create-vinyl-door", "name": "Create Vinyl Door Base Price", "fileName": "" },
+    { "id": "manhattan-door", "name": "Manhattan Door", "fileName": "" },
+    { "id": "cairo-fretted-door", "name": "Cairo Fretted Door", "fileName": "" },
+    { "id": "serica-door", "name": "Serica Slab Supermatt Door", "fileName": "" },
+    { "id": "vision-door", "name": "Vision Acrylic Door", "fileName": "" },
+    { "id": "milano-door", "name": "Milano Slab Door", "fileName": "" },
+    { "id": "fusion-textured-door", "name": "Fusion Textured Door", "fileName": "" },
+    { "id": "fusion-mirror-gloss-door", "name": "Fusion Mirror Gloss Door", "fileName": "" }
+  ],
+  "shared": [
+    { "id": "aluminium-glass-doors", "name": "Aluminium Glass Doors", "fileName": "" },
+    { "id": "feature-glazing", "name": "Feature Glazing / Fretted Frames", "fileName": "" }
+  ]
+}

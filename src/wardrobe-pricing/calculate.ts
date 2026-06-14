@@ -14,6 +14,13 @@ function roundUpToBand(value: number, bands: number[]): number | null {
   return sorted.find((b) => value <= b) ?? null;
 }
 
+function bandRangeLabel(bands: number[]): string {
+  const sorted = [...bands].sort((a, b) => a - b);
+  const min = sorted[0];
+  const max = sorted[sorted.length - 1];
+  return min != null && max != null ? `${min}-${max}mm` : "the available bands";
+}
+
 export interface PriceResolution {
   unitPrice: number;
   warning?: string;
@@ -59,9 +66,16 @@ export function resolveUnitPrice(
       const rw = roundUpToBand(w, mode.widths);
       const rh = roundUpToBand(h, mode.heights);
       if (rw == null || rh == null) {
+        const widthRange = bandRangeLabel(mode.widths);
+        const heightRange = bandRangeLabel(mode.heights);
+        const maxWidth = Math.max(...mode.widths);
+        const minHeight = Math.min(...mode.heights);
+        const looksSwapped = w > maxWidth && h < minHeight;
         return {
           unitPrice: 0,
-          warning: `Size ${w}x${h}mm is outside the available pricing grid.`,
+          warning: looksSwapped
+            ? `Size ${w}x${h}mm is outside the pricing grid. Enter width first, then height; this looks like height and width may be swapped. Available priced widths: ${widthRange}; heights: ${heightRange}.`
+            : `Size ${w}x${h}mm is outside the pricing grid. Available priced widths: ${widthRange}; heights: ${heightRange}.`,
         };
       }
       const wi = mode.widths.indexOf(rw);

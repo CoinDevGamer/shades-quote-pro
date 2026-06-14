@@ -49,6 +49,8 @@ export interface WardrobeProduct {
   requiresDimensions: boolean;
   /** Optional product-level notes shown as helper text. */
   description?: string;
+  /** Optional catalogue image used as a visual reference, not for pricing. */
+  imageSrc?: string;
   pricing: WardrobePricingMode;
 }
 
@@ -57,6 +59,8 @@ export interface WardrobeCategory {
   name: string;
   /** Short subtitle shown under the category name. */
   blurb: string;
+  /** Optional catalogue image used as a visual reference, not for pricing. */
+  imageSrc?: string;
   products: WardrobeProduct[];
 }
 

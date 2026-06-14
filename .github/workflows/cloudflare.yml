@@ -17,7 +17,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      XDG_CONFIG_HOME: ${{ runner.temp }}/wrangler-config
+      XDG_CONFIG_HOME: /tmp/wrangler-config
 
     steps:
       - name: Checkout
